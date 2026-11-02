@@ -15,6 +15,8 @@ FRONTEND := frontend
 
 .DEFAULT_GOAL := help
 .PHONY: help setup start install env migrate clean
+# `setup` depende de que install, env y migrate corran en orden, también con -j.
+.NOTPARALLEL:
 
 # La ayuda se genera a partir de los comentarios `## ...` de cada target, para
 # que no haya un segundo listado que mantener a mano y que pueda divergir.
@@ -82,15 +84,20 @@ migrate:
 #   - el final de cada subshell, cuando *ese* servidor termina por su cuenta.
 #
 # Lo segundo es necesario porque `wait` a secas espera a que acaben TODOS los
-# jobs: si el backend crashea al arrancar, el frontend seguiría vivo para
-# siempre y el usuario no se enteraría. No se usa `wait -n` (que sería lo
-# natural) porque llegó en bash 4.3 y macOS trae bash 3.2.
+# jobs. No se usa `wait -n` (que sería lo natural) porque llegó en bash 4.3 y
+# macOS trae bash 3.2.
+#
+# Límite: si el servidor del backend falla, al arrancar o después, `ace serve
+# --hmr` no termina: sigue vigilando archivos para reiniciarlo. `npm run dev` no
+# retorna y el frontend sigue levantado; el error solo se ve en la consola.
+#
 # Ojo: `start` está pensado para uso interactivo, desde una terminal. No lo
 # llames desde un script ni desde CI: sin control de trabajos, el grupo de
 # procesos incluye al proceso que invocó a make, y el SIGINT se lo llevaría por
-# delante a él también. Aislar los servidores en su propio grupo con `set -m`
-# no vale: los dejaría en segundo plano y el primer `read` de stdin les
-# provocaría un SIGTTIN, colgando el "Press h" de Adonis y los atajos de Vite.
+# delante a él también.
+#
+# Los `&` sin control de trabajos dejan stdin en /dev/null, así que los atajos
+# de teclado de Adonis y Vite no funcionan aquí, aunque Adonis anuncie "Press h".
 start: ## Levanta backend y frontend a la vez
 	@if [ ! -d $(BACKEND)/node_modules ] || [ ! -d $(FRONTEND)/node_modules ]; then \
 		echo "❌ Faltan dependencias. Ejecuta primero: make setup"; exit 1; \
@@ -98,8 +105,9 @@ start: ## Levanta backend y frontend a la vez
 	@if [ ! -f $(BACKEND)/.env ]; then \
 		echo "❌ Falta $(BACKEND)/.env. Ejecuta primero: make setup"; exit 1; \
 	fi
-	@echo "🚀 Arrancando backend (http://localhost:3333) y frontend (http://localhost:5173)..."
-	@echo "   Ctrl-C para parar los dos. Si uno se cae, el otro se cierra también."
+	@echo "🚀 Arrancando backend y frontend (por defecto en los puertos 3333 y 5173)..."
+	@echo "   Si un puerto está ocupado, ese servidor usa otro: mira las URLs en la salida."
+	@echo "   Ctrl-C para parar los dos."
 	@echo ""
 	@trap 'trap - INT TERM EXIT; kill -INT 0' INT TERM EXIT; \
 	( cd $(BACKEND)  && npm run dev; \
