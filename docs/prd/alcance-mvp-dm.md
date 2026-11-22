@@ -30,7 +30,7 @@ En un equipo remoto pequeño nadie ve en qué está cada uno sin interrumpir a a
 
 ### Usuarios
 
-- **Quién:** pares de un equipo remoto de 3 a 10 personas, todos con el mismo rol. Ven y editan lo mismo.
+- **Quién:** pares de un equipo remoto de 3 a 10 personas, todos con el mismo rol. Todos ven lo mismo y nadie tiene permisos especiales; lo que se puede hacer sobre una tarea depende solo de si eres su responsable (ver supuestos).
 - **Caso de estudio (no es un cliente real):** equipo de producto SaaS de 6 personas, repartido en 3 husos horarios, con un gestor de tareas pesado y una daily de 15 minutos por videollamada.
 - **Quién no:** el manager o el lead que busca un reporte hacia arriba. Tampoco un equipo que necesite sprints, estimaciones o backlog priorizado.
 
@@ -43,7 +43,7 @@ Una lista compartida que es a la vez la cola de trabajo de cada persona y el est
 Una única vertical: **la lista compartida de tareas, viva**.
 
 1. **Crear una tarea en segundos.** Solo el título es obligatorio; la fecha de vencimiento es opcional. Quien la crea puede quedársela al momento o dejarla libre.
-2. **Coger una tarea libre para uno mismo.** Si una tarea ya tiene responsable, nadie más puede cogerla. El responsable puede soltarla y vuelve a quedar libre.
+2. **Coger una tarea libre para uno mismo.** Si una tarea ya tiene responsable, nadie más puede cogerla. Mientras no esté terminada, el responsable puede soltarla: vuelve a quedar libre y en *pendiente*.
 3. **Cambiar el estado en dos clics.** Hay cuatro estados: *pendiente*, *en curso*, *bloqueada* y *terminada*. Una tarea terminada sigue en la lista, pero ya no se puede coger.
 4. **Ver la lista del equipo de un vistazo.** Cada tarea muestra título, responsable (o "libre"), estado, fecha de vencimiento, fecha de creación y fecha de última modificación. Las tareas vencidas y no terminadas se distinguen a simple vista.
 5. **Filtrar la lista por estado**, para centrarse en lo pendiente.
@@ -90,6 +90,6 @@ Una única vertical: **la lista compartida de tareas, viva**.
 - **Riesgo #1, la información se queda vieja:** si nadie actualiza, el producto pierde el sentido. La mitigación es que actualizar cueste dos clics y que las fechas de última modificación estén a la vista. No se obliga a nadie.
 - **Espacio único:** todos los usuarios registrados comparten un único espacio de tareas. Varios equipos separados, o personas en más de uno, quedan fuera.
 - **Registro abierto:** cualquiera con acceso a la URL puede registrarse y ver o editar la lista. Se acepta para el caso de estudio y no vale para un cliente real.
-- **Quién cambia el estado:** solo el responsable de la tarea cambia su estado o la suelta. Cualquiera puede crear tareas y coger una libre. *(Supuesto propio: los hechos dicen "todos editan lo mismo" pero también "el estado lo teclea quien hace la tarea"; prima lo segundo.)*
-- **Tareas libres:** una tarea sin responsable solo puede estar *pendiente*. *(Supuesto propio.)*
-- **Editar título y fecha:** se puede corregir el título y la fecha de vencimiento de una tarea no terminada. *(Supuesto propio, para no forzar a borrar y recrear por una errata.)*
+- **Quién cambia el estado:** solo el responsable de la tarea cambia su estado, la suelta o corrige su título y fecha. Cualquiera puede crear tareas, coger una libre y corregir el título o la fecha de una libre. *(Supuesto propio: los hechos dicen "todos editan lo mismo" pero también "el estado lo teclea quien hace la tarea"; prima lo segundo.)*
+- **Tareas libres:** una tarea sin responsable solo puede estar *pendiente*. Una tarea terminada no se puede soltar: conserva su responsable. *(Supuesto propio.)*
+- **Corregir título y fecha:** se permite en tareas no terminadas, con las reglas de arriba, para no forzar a crear otra tarea por una errata. Es parte de "crear una tarea", no una capability aparte. *(Supuesto propio.)*
